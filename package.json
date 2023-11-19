@@ -24,16 +24,16 @@
   "dependencies": {
     "formidable": "^3.5.1",
     "fs": "^0.0.1-security",
-    "js-yaml": "^3.14.1",
-    "ramda": "^0.24.1",
-    "rxjs": "^6.0.0"
+    "js-yaml": "^4.1.0",
+    "ramda": "^0.29.1",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.24.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "dependency-cruiser": "6.0.0",
-    "standard": "^10.0.2"
+    "dependency-cruiser": "15.3.0",
+    "standard": "^17.1.0"
   }
 }
