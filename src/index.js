@@ -1,4 +1,4 @@
-const Telemetry = require('./telemetry');
+const Telemetry = require('./telemetry')
 
 module.exports = async function (context, req) {
   try {
