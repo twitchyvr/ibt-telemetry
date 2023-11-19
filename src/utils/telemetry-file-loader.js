@@ -6,6 +6,15 @@ const { SIZE_IN_BYTES: VAR_HEADER_SIZE_IN_BYTES, VarHeader } = require('../heade
 const readFileToBuffer = require('../utils/read-file-to-buffer')
 const Telemetry = require('../telemetry')
 
+// Utility function to log and check if a value is a number
+function isNumber (value, name) {
+  if (typeof value !== 'number' || isNaN(value)) {
+    console.error(`${name} is not a number. Received:`, value)
+    return false
+  }
+  return true
+}
+
 const openDataFile = dataFile => new Promise((resolve, reject) => {
   fs.open(dataFile, 'r', (err, fd) => {
     err ? reject(err) : resolve(fd)
@@ -22,20 +31,23 @@ const diskSubHeaderFromFileDescriptor = fd =>
   readFileToBuffer(fd, DISK_SUB_HEADER_SIZE_IN_BYTES, HEADER_SIZE_IN_BYTES)
     .then(DiskSubHeader.fromBuffer)
 
-/**
-const sessionInfoStringFromFileDescriptor = (fd, telemetryHeader) =>
-readFileToBuffer(fd, telemetryHeader.sessionInfoOffset, telemetryHeader.sessionInfoLength)
-.then(x => x.toString('ascii'))
-*/
-
 const sessionInfoStringFromFileDescriptor = (fd, telemetryHeader) => {
+  if (!isNumber(telemetryHeader.sessionInfoOffset, 'sessionInfoOffset') ||
+    !isNumber(telemetryHeader.sessionInfoLength, 'sessionInfoLength')) {
+    return Promise.reject(new Error('Invalid session info offset or length'))
+  }
+
   return readFileToBuffer(fd, telemetryHeader.sessionInfoOffset, telemetryHeader.sessionInfoLength)
     .then(buffer => {
-      return buffer.toString('ascii') // encode as ascii
+      return buffer.toString('ascii')
     })
 }
 
 const varHeadersFromFileDescriptor = (fd, telemetryHeader) => {
+  if (!isNumber(telemetryHeader.numVars, 'numVars')) {
+    return Promise.reject(new Error('Invalid number of variables (numVars)'))
+  }
+
   const numberOfVariables = telemetryHeader.numVars
   const startPosition = telemetryHeader.varHeaderOffset
   const fullBufferSize = numberOfVariables * VAR_HEADER_SIZE_IN_BYTES
