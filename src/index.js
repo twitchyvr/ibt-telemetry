@@ -10,7 +10,7 @@ module.exports = async function (context, req) {
     const parse = util.promisify(form.parse).bind(form)
 
     // Parse the form
-    // const { fields, files } = await parse(req)
+    const  files = await parse(req)
 
     // Get uploaded file
     const uploadedFile = files.ibtFile
