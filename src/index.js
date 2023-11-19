@@ -1,19 +1,18 @@
 /**
  * iRacing ibt telemetry parser.
 
-import Telemetry from './telemetry'
-import Sample from './telemetry-sample'
-import readFileToBuffer from './utils/read-file-to-buffer'
-import telemetryFileLoader from './utils/telemetry-file-loader'
-import irsdkConstants from './irsdk-constants'
+const Telemetry = require('./telemetry')
+const Sample = require('./telemetry-sample')
+const readFileToBuffer = require('./utils/read-file-to-buffer')
+const telemetryFileLoader = require('./utils/telemetry-file-loader')
+const irsdkConstants = require('./irsdk-constants')
 
-export {
+module.exports = {
   Telemetry,
-  Telemetry as default,
-  irsdkConstants as constants,
   Sample,
   readFileToBuffer,
-  telemetryFileLoader
+  telemetryFileLoader,
+  constants: irsdkConstants
 }
 */
 
