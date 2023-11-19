@@ -14,10 +14,17 @@ module.exports = async function (context, req) {
     const telemetry = new Telemetry(telemetryData)
     console.log(telemetry.header)
 
+    // Example: Create a summary or extract specific data from telemetry
+    const telemetrySummary = {
+      uniqueId: telemetry.uniqueId(),
+      header: telemetry.header
+      // Add other telemetry properties or summaries here
+    }
+
     // Response
     context.res = {
       status: 200,
-      body: 'Telemetry data processed.'
+      body: telemetrySummary
     }
   } catch (error) {
     context.res = {
