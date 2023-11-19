@@ -66,13 +66,25 @@ class Telemetry {
       SubSessionID: 'Unknown'
     }
 
-    const driverInfo = this.sessionInfo?.DriverInfo || defaultDriverInfo
-    const weekendInfo = this.sessionInfo?.WeekendInfo || defaultWeekendInfo
+    let driverInfo = defaultDriverInfo
+    let weekendInfo = defaultWeekendInfo
+
+    if (this.sessionInfo && this.sessionInfo.DriverInfo) {
+      driverInfo = this.sessionInfo.DriverInfo
+    }
+
+    if (this.sessionInfo && this.sessionInfo.WeekendInfo) {
+      weekendInfo = this.sessionInfo.WeekendInfo
+    }
 
     const driverCarIdx = driverInfo.DriverCarIdx || 0
     const driver = driverInfo.Drivers[driverCarIdx]
 
-    const accountId = driver?.UserID || 'Unknown'
+    let accountId = 'Unknown'
+    if (driver && driver.UserID) {
+      accountId = driver.UserID
+    }
+
     const sessionId = weekendInfo.SessionID
     const subSessionId = weekendInfo.SubSessionID
 
