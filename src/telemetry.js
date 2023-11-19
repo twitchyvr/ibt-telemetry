@@ -77,21 +77,39 @@ class Telemetry {
    * Extract Driver Information
    */
   getDriverInfo () {
-    return this.sessionInfo?.DriverInfo?.Drivers?.[this.sessionInfo.DriverInfo.DriverCarIdx] ?? null
+    if (!this.sessionInfo) return null
+
+    const driverInfo = this.sessionInfo.DriverInfo
+
+    if (!driverInfo) return null
+
+    return driverInfo.Drivers?.[driverInfo.DriverCarIdx] ?? null
   }
 
   /**
    * Extract Track Information
    */
   getTrackInfo () {
-    return this.sessionInfo?.WeekendInfo?.TrackDisplayName ?? 'Unknown Track'
+    if (!this.sessionInfo) return 'Unknown Track'
+
+    const weekendInfo = this.sessionInfo.WeekendInfo
+
+    if (!weekendInfo) return 'Unknown Track'
+
+    return weekendInfo.TrackDisplayName ?? 'Unknown Track'
   }
 
   /**
    * Extract Vehicle Information
    */
   getVehicleInfo () {
-    return this.sessionInfo?.DriverInfo?.DriverCarDescription ?? 'Unknown Vehicle'
+    if (!this.sessionInfo) return 'Unknown Vehicle'
+
+    const driverInfo = this.sessionInfo.DriverInfo
+
+    if (!driverInfo) return 'Unknown Vehicle'
+
+    return driverInfo.DriverCarDescription ?? 'Unknown Vehicle'
   }
 
   /**
