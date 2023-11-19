@@ -12,6 +12,8 @@ module.exports = async function (context, req) {
 
     // Process telemetry
     const telemetry = new Telemetry(telemetryData)
+
+    console.log('Telemetry headers:', telemetry.headers)
     console.log(telemetry.header)
 
     // Example: Create a summary or extract specific data from telemetry

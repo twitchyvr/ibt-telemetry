@@ -16,7 +16,14 @@ class Telemetry {
     try {
       this.headers = telemetryHeader
       this.diskHeaders = diskSubHeader
-      this.sessionInfo = yaml.load(sessionInfo)
+      try {
+        const yamlString = sessionInfo.toString()
+        console.log('Raw YAML:', yamlString)
+        this.sessionInfo = yaml.load(sessionInfo)
+      } catch (error) {
+        console.error('Error parsing YAML:', error)
+        this.sessionInfo = {}
+      }
     } catch (error) {
       console.error('Error loading YAML content:', error)
       this.sessionInfo = {}
@@ -62,6 +69,7 @@ class Telemetry {
     const sessionId = this.sessionInfo && this.sessionInfo.WeekendInfo && this.sessionInfo.WeekendInfo.SessionID
       ? this.sessionInfo.WeekendInfo.SessionID
       : defaultId
+    console.log('Session ID:', sessionId)
     const subSessionId = this.sessionInfo && this.sessionInfo.WeekendInfo && this.sessionInfo.WeekendInfo.SubSessionID
       ? this.sessionInfo.WeekendInfo.SubSessionID
       : defaultId
