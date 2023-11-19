@@ -1,4 +1,4 @@
-import fs from 'fs'
+const fs = require('fs')
 
 // Read a file from the start position and return a buffer of the supplied length
 const readFileToBuffer = (fd, startPosition, bufferLength) => new Promise((resolve, reject) => {
@@ -8,4 +8,4 @@ const readFileToBuffer = (fd, startPosition, bufferLength) => new Promise((resol
   })
 })
 
-export default readFileToBuffer
+module.exports = readFileToBuffer

@@ -48,5 +48,7 @@ class TelemetryHeader {
   }
 }
 
-export { SIZE_IN_BYTES, TelemetryHeader }
-export default TelemetryHeader
+module.exports = {
+  SIZE_IN_BYTES,
+  TelemetryHeader
+}
