@@ -12,7 +12,6 @@ const openDataFile = dataFile => new Promise((resolve, reject) => {
   })
 })
 
-
 // Return the Telemetry header from the supplied file descriptor
 const telemetryHeaderFromFileDescriptor = fd =>
   readFileToBuffer(fd, 0, HEADER_SIZE_IN_BYTES)
