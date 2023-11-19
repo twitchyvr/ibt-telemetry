@@ -13,9 +13,14 @@ class Telemetry {
    * Telemetry constructor.
    */
   constructor (telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd) {
-    this.headers = telemetryHeader
-    this.diskHeaders = diskSubHeader
-    this.sessionInfo = yaml.load(sessionInfo)
+    try {
+      this.headers = telemetryHeader
+      this.diskHeaders = diskSubHeader
+      this.sessionInfo = yaml.load(sessionInfo)
+    } catch (error) {
+      console.error('Error loading YAML content:', error)
+      this.sessionInfo = {}
+    }
 
     fileDescriptor.set(this, fd)
     variableHeaders.set(this, varHeaders)
@@ -51,23 +56,38 @@ class Telemetry {
     const defaultId = 'Unknown'
 
     // Safely access nested properties
-    const accountId = this.sessionInfo && this.sessionInfo.DriverInfo && Array.isArray(this.sessionInfo.DriverInfo.Drivers) &&
-      this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx]
-      ? this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
-      : defaultId
+    const accountId = this.sessionInfo?.DriverInfo?.Drivers?.[this.sessionInfo.DriverInfo.DriverCarIdx]?.UserID ?? defaultId
+    const sessionId = this.sessionInfo?.WeekendInfo?.SessionID ?? defaultId
+    const subSessionId = this.sessionInfo?.WeekendInfo?.SubSessionID ?? defaultId
 
-    const sessionId = this.sessionInfo && this.sessionInfo.WeekendInfo
-      ? this.sessionInfo.WeekendInfo.SessionID
-      : defaultId
-
-    const subSessionId = this.sessionInfo && this.sessionInfo.WeekendInfo
-      ? this.sessionInfo.WeekendInfo.SubSessionID
-      : defaultId
+    // Log the IDs for debugging
+    console.log(`Extracted IDs - Account: ${accountId}, Session: ${sessionId}, SubSession: ${subSessionId}`)
 
     // Concatenate the IDs with safety checks
     return `${accountId}-${sessionId}-${subSessionId}`
   }
-  
+
+  /**
+   * Extract Driver Information
+   */
+  getDriverInfo () {
+    return this.sessionInfo?.DriverInfo?.Drivers?.[this.sessionInfo.DriverInfo.DriverCarIdx] ?? null
+  }
+
+  /**
+   * Extract Track Information
+   */
+  getTrackInfo () {
+    return this.sessionInfo?.WeekendInfo?.TrackDisplayName ?? 'Unknown Track'
+  }
+
+  /**
+   * Extract Vehicle Information
+   */
+  getVehicleInfo () {
+    return this.sessionInfo?.DriverInfo?.DriverCarDescription ?? 'Unknown Vehicle'
+  }
+
   /**
    * Telemetry samples generator.
    */
