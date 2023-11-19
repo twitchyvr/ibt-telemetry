@@ -5,8 +5,14 @@ const yaml = require('js-yaml')
 const variableHeaders = new WeakMap()
 const fileDescriptor = new WeakMap()
 
-class Telemetry {
-  constructor(telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd) {
+/**
+ * iRacing Telemetry
+ */
+export default class Telemetry {
+  /**
+   * Telemetry constructor.
+   */
+  constructor (telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd) {
     this.headers = telemetryHeader
     this.diskHeaders = diskSubHeader
     this.sessionInfo = yaml.safeLoad(sessionInfo)
@@ -15,22 +21,42 @@ class Telemetry {
     variableHeaders.set(this, varHeaders)
   }
 
-  static fromFile(file) {
+  /**
+   * Instantiate a Telemetry instance from the contents of an ibt file
+   *
+   * @param file path to *.ibt file
+   * @return Telemetry instance of telemetry
+   */
+  static fromFile (file) {
     return telemetryFileLoader(file)
   }
 
-  get varHeaders() {
+  /**
+   * Telemetry variable headers.
+   */
+  get varHeaders () {
     return variableHeaders.get(this)
   }
 
-  uniqueId() {
+  /**
+   * Generate a unique key for the telemetry session.
+   *
+   * The unique key is a combination of 3 fields:
+   *   accountId-sessionId-subSessionId
+   *
+   * @return string
+   */
+  uniqueId () {
     const accountId = this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
     const sessionId = this.sessionInfo.WeekendInfo.SessionID
     const subSessionId = this.sessionInfo.WeekendInfo.SubSessionID
     return `${accountId}-${sessionId}-${subSessionId}`
   }
 
-  * samples() {
+  /**
+   * Telemetry samples generator.
+   */
+  * samples () {
     let hasSample = true
     let count = 0
 
