@@ -22,7 +22,7 @@ const diskSubHeaderFromFileDescriptor = fd =>
   readFileToBuffer(fd, DISK_SUB_HEADER_SIZE_IN_BYTES, HEADER_SIZE_IN_BYTES)
     .then(DiskSubHeader.fromBuffer)
 
-/** 
+/**
 const sessionInfoStringFromFileDescriptor = (fd, telemetryHeader) =>
 readFileToBuffer(fd, telemetryHeader.sessionInfoOffset, telemetryHeader.sessionInfoLength)
 .then(x => x.toString('ascii'))
@@ -31,7 +31,7 @@ readFileToBuffer(fd, telemetryHeader.sessionInfoOffset, telemetryHeader.sessionI
 const sessionInfoStringFromFileDescriptor = (fd, telemetryHeader) => {
   return readFileToBuffer(fd, telemetryHeader.sessionInfoOffset, telemetryHeader.sessionInfoLength)
     .then(buffer => {
-      return buffer.toString('utf8'); // encode as utf-8
+      return buffer.toString('utf8') // encode as utf-8
     })
 }
 
