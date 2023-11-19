@@ -15,7 +15,7 @@ class Telemetry {
   constructor (telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd) {
     this.headers = telemetryHeader
     this.diskHeaders = diskSubHeader
-    this.sessionInfo = yaml.safeLoad(sessionInfo)
+    this.sessionInfo = yaml.load(sessionInfo)
 
     fileDescriptor.set(this, fd)
     variableHeaders.set(this, varHeaders)
