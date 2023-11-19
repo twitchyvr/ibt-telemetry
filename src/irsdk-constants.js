@@ -195,4 +195,4 @@ const variables = {
   }
 }
 
-export default variables
+module.exports = variables

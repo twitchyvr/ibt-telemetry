@@ -1,17 +1,17 @@
-import fs from 'fs'
-import R from 'ramda'
-import { SIZE_IN_BYTES as HEADER_SIZE_IN_BYTES, TelemetryHeader } from '../headers/telemetry-header'
-import { SIZE_IN_BYTES as DISK_SUB_HEADER_SIZE_IN_BYTES, DiskSubHeader } from '../headers/disk-sub-header'
-import { SIZE_IN_BYTES as VAR_HEADER_SIZE_IN_BYTES, VarHeader } from '../headers/var-header'
-import readFileToBuffer from '../utils/read-file-to-buffer'
-import Telemetry from '../telemetry'
+const fs = require('fs')
+const R = require('ramda')
+const { SIZE_IN_BYTES: HEADER_SIZE_IN_BYTES, TelemetryHeader } = require('../headers/telemetry-header')
+const { SIZE_IN_BYTES: DISK_SUB_HEADER_SIZE_IN_BYTES, DiskSubHeader } = require('../headers/disk-sub-header')
+const { SIZE_IN_BYTES: VAR_HEADER_SIZE_IN_BYTES, VarHeader } = require('../headers/var-header')
+const readFileToBuffer = require('../utils/read-file-to-buffer')
+const Telemetry = require('../telemetry')
 
-// Open the data file and return it's file descriptor as a promise
 const openDataFile = dataFile => new Promise((resolve, reject) => {
   fs.open(dataFile, 'r', (err, fd) => {
     err ? reject(err) : resolve(fd)
   })
 })
+
 
 // Return the Telemetry header from the supplied file descriptor
 const telemetryHeaderFromFileDescriptor = fd =>
@@ -62,4 +62,4 @@ const telemetryFileLoader = (file) => {
     })
 }
 
-export default telemetryFileLoader
+module.exports = telemetryFileLoader

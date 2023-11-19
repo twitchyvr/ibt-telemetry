@@ -35,5 +35,7 @@ class DiskSubHeader {
   }
 }
 
-export { SIZE_IN_BYTES, DiskSubHeader }
-export default DiskSubHeader
+module.exports = {
+  SIZE_IN_BYTES,
+  DiskSubHeader
+}

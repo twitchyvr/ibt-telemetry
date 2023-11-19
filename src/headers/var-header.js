@@ -43,5 +43,7 @@ class VarHeader {
   }
 }
 
-export { SIZE_IN_BYTES, VarHeader }
-export default VarHeader
+module.exports = {
+  SIZE_IN_BYTES,
+  VarHeader
+}
