@@ -6,7 +6,8 @@
       "direction": "in",
       "name": "req",
       "methods": ["post"],
-      "route": "parseFile"
+      "route": "parseFile",
+      "dataType": "binary"
     },
     {
       "type": "http",
