@@ -1,8 +1,8 @@
-const Irsdk = require('./irsdk-constants');
-const R = require('ramda');
+const Irsdk = require('./irsdk-constants')
+const R = require('ramda')
 const variableHeaders = new WeakMap()
 
-export default class TelemetrySample {
+class TelemetrySample {
   constructor (buff, varHeaders) {
     this._buff = buff
     variableHeaders.set(this, varHeaders)
@@ -36,3 +36,5 @@ export default class TelemetrySample {
       .reduce((accum, header) => R.assoc(getName(header), valueFromHeader(header), accum), {})
   }
 }
+
+module.exports = TelemetrySample
