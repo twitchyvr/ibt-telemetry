@@ -34,6 +34,8 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "dependency-cruiser": "15.3.0",
+    "eslint-plugin-react": "^7.33.2",
+    "jsx-ast-utils": "^3.3.5",
     "standard": "^17.1.0"
   }
 }
