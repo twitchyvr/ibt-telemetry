@@ -83,7 +83,8 @@ class Telemetry {
 
     if (!driverInfo) return null
 
-    return driverInfo.Drivers?.[driverInfo.DriverCarIdx] ?? null
+    const driver = driverInfo.Drivers[driverInfo.DriverCarIdx]
+    return driver !== undefined && driver !== null ? driver : null
   }
 
   /**
