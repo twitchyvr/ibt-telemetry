@@ -8,7 +8,7 @@ const fileDescriptor = new WeakMap()
 /**
  * iRacing Telemetry
  */
-export default class Telemetry {
+class Telemetry {
   /**
    * Telemetry constructor.
    */
