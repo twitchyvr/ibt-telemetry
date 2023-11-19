@@ -97,7 +97,7 @@ class Telemetry {
 
     if (!weekendInfo) return 'Unknown Track'
 
-    return weekendInfo.TrackDisplayName ?? 'Unknown Track'
+    return weekendInfo.TrackDisplayName !== undefined && weekendInfo.TrackDisplayName !== null ? weekendInfo.TrackDisplayName : 'Unknown Track'
   }
 
   /**
@@ -110,7 +110,7 @@ class Telemetry {
 
     if (!driverInfo) return 'Unknown Vehicle'
 
-    return driverInfo.DriverCarDescription ?? 'Unknown Vehicle'
+    return driverInfo.DriverCarDescription !== undefined && driverInfo.DriverCarDescription !== null ? driverInfo.DriverCarDescription : 'Unknown Vehicle'
   }
 
   /**
