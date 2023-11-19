@@ -24,13 +24,16 @@ const { Telemetry } = require('./telemetry')
 
 module.exports = async function (context, req) {
   try {
-    // Parse the multipart/form-data request
+    // Buffer the request body
+    const requestBodyBuffer = Buffer.from(req.body)
+
+    // Parse the request body using formidable
     const formData = await new Promise((resolve, reject) => {
       const form = new formidable.IncomingForm()
 
-      form.parse(req, (err, fields, files) => {
+      form.parse({headers: req.headers, body: requestBodyBuffer}, (err, fields, files) => {
         if (err) reject(err)
-        resolve(files)
+        resolve({fields, files})
       })
     })
 
