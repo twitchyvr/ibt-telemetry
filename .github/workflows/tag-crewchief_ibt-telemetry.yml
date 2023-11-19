@@ -6,7 +6,7 @@ name: Build and deploy Node.js project to Azure Function App - ibt-telemetry
 on:
   push:
     branches:
-      - tag-crewchief
+      - main
   workflow_dispatch:
 
 env:
