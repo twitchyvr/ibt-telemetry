@@ -56,7 +56,9 @@ class Telemetry {
     const defaultId = 'Unknown'
 
     // Safely access nested properties
-    const accountId = this.sessionInfo?.DriverInfo?.Drivers?.[this.sessionInfo.DriverInfo.DriverCarIdx]?.UserID ?? defaultId
+    const accountId = this.sessionInfo && this.sessionInfo.DriverInfo && this.sessionInfo.DriverInfo.Drivers && this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx]
+      ? this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
+      : defaultId
     const sessionId = this.sessionInfo?.WeekendInfo?.SessionID ?? defaultId
     const subSessionId = this.sessionInfo?.WeekendInfo?.SubSessionID ?? defaultId
 
