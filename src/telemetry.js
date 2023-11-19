@@ -121,11 +121,11 @@ class Telemetry {
     return driverInfo.DriverCarDescription !== undefined && driverInfo.DriverCarDescription !== null ? driverInfo.DriverCarDescription : 'Unknown Vehicle'
   }
 
-  getSessionType() {
-    if (!this.sessionInfo || !this.sessionInfo.WeekendInfo) return 'Unknown Session Type';
-  
-    return this.sessionInfo.WeekendInfo.SessionType || 'Unknown Session Type';
-  }  
+  getSessionType () {
+    if (!this.sessionInfo || !this.sessionInfo.WeekendInfo) return 'Unknown Session Type'
+
+    return this.sessionInfo.WeekendInfo.SessionType || 'Unknown Session Type'
+  }
 
   /**
    * Telemetry samples generator.
