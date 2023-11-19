@@ -31,7 +31,7 @@ module.exports = async function (context, req) {
       // You can convert the raw data to a buffer or process it as needed
       const requestBodyBuffer = Buffer.from(rawData)
       // Buffer the request body
-      //const requestBodyBuffer = Buffer.from(req.body)
+      // const requestBodyBuffer = Buffer.from(req.body)
 
       // Parse the request body using formidable
       const formData = await new Promise((resolve, reject) => {
@@ -61,7 +61,7 @@ module.exports = async function (context, req) {
         body: 'Telemetry data processed.'
       }
     } else {
-      throw new Error("No data received in request.");
+      throw new Error('No data received in request.')
     }
   } catch (error) {
     context.res = {
