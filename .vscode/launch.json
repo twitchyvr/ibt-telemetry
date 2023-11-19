@@ -6,7 +6,8 @@
             "type": "node",
             "request": "attach",
             "port": 9229,
-            "preLaunchTask": "func: host start"
+            "preLaunchTask": "func: host start",
+            "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v10.24.1/bin/node"
         }
     ]
 }
