@@ -46,10 +46,31 @@ class Telemetry {
    *
    * @return string
    */
+  /**
   uniqueId () {
     const accountId = this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
     const sessionId = this.sessionInfo.WeekendInfo.SessionID
     const subSessionId = this.sessionInfo.WeekendInfo.SubSessionID
+    return `${accountId}-${sessionId}-${subSessionId}`
+  }
+  */
+
+  uniqueId () {
+    if (!this.sessionInfo || !this.sessionInfo.DriverInfo || !Array.isArray(this.sessionInfo.DriverInfo.Drivers)) {
+      return 'Invalid-Session-Info' // or handle this situation as appropriate for your application
+    }
+
+    const driverCarIdx = this.sessionInfo.DriverInfo.DriverCarIdx
+    const driver = this.sessionInfo.DriverInfo.Drivers[driverCarIdx]
+
+    if (!driver) {
+      return 'Invalid-Driver' // or handle appropriately
+    }
+
+    const accountId = driver.UserID
+    const sessionId = this.sessionInfo.WeekendInfo.SessionID
+    const subSessionId = this.sessionInfo.WeekendInfo.SubSessionID
+
     return `${accountId}-${sessionId}-${subSessionId}`
   }
 
