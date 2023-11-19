@@ -46,14 +46,6 @@ class Telemetry {
    *
    * @return string
    */
-  /** uniqueId () {
-    const accountId = this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
-    const sessionId = this.sessionInfo.WeekendInfo.SessionID
-    const subSessionId = this.sessionInfo.WeekendInfo.SubSessionID
-    return `${accountId}-${sessionId}-${subSessionId}`
-  }
-*/
-
   uniqueId () {
     // Default values to indicate missing or unavailable data
     const defaultId = 'Unknown'
@@ -75,49 +67,7 @@ class Telemetry {
     // Concatenate the IDs with safety checks
     return `${accountId}-${sessionId}-${subSessionId}`
   }
-
-  /**
-  uniqueId () {
-    // Default values to indicate missing data
-    const defaultDriverInfo = {
-      Drivers: [{ UserID: 'Unknown' }]
-    }
-
-    const defaultWeekendInfo = {
-      SessionID: 'Unknown',
-      SubSessionID: 'Unknown'
-    }
-
-    let driverInfo = defaultDriverInfo
-    let weekendInfo = defaultWeekendInfo
-
-    if (this.sessionInfo && this.sessionInfo.DriverInfo) {
-      driverInfo = this.sessionInfo.DriverInfo
-    }
-
-    if (this.sessionInfo && this.sessionInfo.WeekendInfo) {
-      weekendInfo = this.sessionInfo.WeekendInfo
-    }
-
-    const driverCarIdx = driverInfo.DriverCarIdx || 0
-    const driver = driverInfo.Drivers[driverCarIdx]
-
-    let accountId = 'Unknown'
-    if (driver && driver.UserID) {
-      accountId = driver.UserID
-    }
-
-    const sessionId = weekendInfo.SessionID
-    const subSessionId = weekendInfo.SubSessionID
-
-    if (!this.sessionInfo || !this.sessionInfo.DriverInfo || !this.sessionInfo.WeekendInfo) {
-      console.warn('Telemetry: Missing session or driver information, using default values.')
-    }
-
-    return `${accountId}-${sessionId}-${subSessionId}`
-  }
-  */
-
+  
   /**
    * Telemetry samples generator.
    */
