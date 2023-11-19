@@ -1,9 +1,8 @@
-import fs from 'fs'
-import yaml from 'js-yaml'
-
 import TelemetrySample from './telemetry-sample'
 import telemetryFileLoader from './utils/telemetry-file-loader'
 
+const fs = require('fs');
+const yaml = require('js-yaml');
 const variableHeaders = new WeakMap()
 const fileDescriptor = new WeakMap()
 
