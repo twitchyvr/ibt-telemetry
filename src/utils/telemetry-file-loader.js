@@ -31,7 +31,7 @@ readFileToBuffer(fd, telemetryHeader.sessionInfoOffset, telemetryHeader.sessionI
 const sessionInfoStringFromFileDescriptor = (fd, telemetryHeader) => {
   return readFileToBuffer(fd, telemetryHeader.sessionInfoOffset, telemetryHeader.sessionInfoLength)
     .then(buffer => {
-      return buffer.toString('utf8') // encode as utf-8
+      return buffer.toString('ascii') // encode as ascii
     })
 }
 

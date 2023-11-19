@@ -127,6 +127,54 @@ class Telemetry {
     return this.sessionInfo.WeekendInfo.SessionType || 'Unknown Session Type'
   }
 
+  getTelemetryDataSummary () {
+    let totalSpeed = 0
+    let maxRpm = 0
+    let totalLaps = 0
+    let bestLapTime = Number.MAX_VALUE
+    const lapTimes = []
+    let highestSpeed = 0
+    let totalBrakePressure = 0
+    let totalThrottle = 0
+    let sampleCount = 0
+
+    for (const sample of this.samples()) {
+      totalSpeed += sample.speed
+      maxRpm = Math.max(maxRpm, sample.rpm)
+      highestSpeed = Math.max(highestSpeed, sample.speed)
+      totalBrakePressure += sample.brakePressure
+      totalThrottle += sample.throttle
+      sampleCount++
+
+      // Assuming sample.lapTime and sample.lapNumber are available
+      if (sample.lapTime < bestLapTime) {
+        bestLapTime = sample.lapTime
+      }
+      if (!lapTimes[sample.lapNumber]) {
+        lapTimes[sample.lapNumber] = []
+      }
+      lapTimes[sample.lapNumber].push(sample.lapTime)
+    }
+
+    totalLaps = lapTimes.length
+
+    // Calculate averages
+    const avgSpeed = totalSpeed / sampleCount
+    const avgBrakePressure = totalBrakePressure / sampleCount
+    const avgThrottle = totalThrottle / sampleCount
+
+    return {
+      averageSpeed: avgSpeed,
+      maxRPM: maxRpm,
+      totalLaps,
+      bestLapTime,
+      highestSpeed,
+      averageBrakePressure: avgBrakePressure,
+      averageThrottle: avgThrottle,
+      lapTimes: lapTimes.map(lap => lap.reduce((a, b) => a + b, 0) / lap.length)
+    }
+  }
+
   /**
    * Telemetry samples generator.
    */
