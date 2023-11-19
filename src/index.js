@@ -1,41 +1,28 @@
-const formidable = require('formidable')
-const util = require('util')
-const fs = require('fs')
-const { Telemetry } = require('./telemetry')
+const { Telemetry } = require('./telemetry');
 
 module.exports = async function (context, req) {
   try {
-    // Convert formidable form parsing to a promise
-    const form = new formidable.IncomingForm()
-    const parse = util.promisify(form.parse).bind(form)
-
-    // Parse the form
-    const files = await parse(req)
-
-    // Get uploaded file
-    const uploadedFile = files.ibtFile
-
-    // Ensure file exists
-    if (!uploadedFile) {
-      throw new Error('No file uploaded.')
+    // Check if there is content in the request body
+    if (!req.rawBody) {
+      throw new Error('No file uploaded.');
     }
 
-    // Read file
-    const telemetryData = fs.readFileSync(uploadedFile.filepath)
+    // The binary data of the .ibt file is contained in req.rawBody
+    const telemetryData = req.rawBody;
 
     // Process telemetry
-    const telemetry = new Telemetry(telemetryData)
-    console.log(telemetry.header)
+    const telemetry = new Telemetry(telemetryData);
+    console.log(telemetry.header);
 
     // Response
     context.res = {
       status: 200,
       body: 'Telemetry data processed.'
-    }
+    };
   } catch (error) {
     context.res = {
       status: 500,
       body: `Error: ${error.message}`
-    }
+    };
   }
-}
+};
