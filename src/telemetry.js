@@ -13,19 +13,21 @@ class Telemetry {
    * Telemetry constructor.
    */
   constructor (telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd) {
-    try {
-      this.headers = telemetryHeader
-      this.diskHeaders = diskSubHeader
+    this.headers = telemetryHeader
+    this.diskHeaders = diskSubHeader
+
+    // Check if sessionInfo is not undefined
+    if (sessionInfo) {
       try {
         const yamlString = sessionInfo.toString()
         console.log('Raw YAML:', yamlString)
-        this.sessionInfo = yaml.load(sessionInfo)
+        this.sessionInfo = yaml.load(yamlString) // Make sure to load from yamlString
       } catch (error) {
         console.error('Error parsing YAML:', error)
         this.sessionInfo = {}
       }
-    } catch (error) {
-      console.error('Error loading YAML content:', error)
+    } else {
+      console.error('sessionInfo is undefined')
       this.sessionInfo = {}
     }
 
