@@ -19,7 +19,10 @@ module.exports = async function (context, req) {
     // Example: Create a summary or extract specific data from telemetry
     const telemetrySummary = {
       uniqueId: telemetry.uniqueId(),
-      header: telemetry.header
+      header: telemetry.header,
+      sessionInfo: telemetry.sessionInfo,
+      varHeaders: telemetry.varHeaders,
+      telemetryData: telemetry.data
       // Add other telemetry properties or summaries here
     }
 
