@@ -31,9 +31,9 @@ module.exports = async function (context, req) {
     const formData = await new Promise((resolve, reject) => {
       const form = new formidable.IncomingForm()
 
-      form.parse({headers: req.headers, body: requestBodyBuffer}, (err, fields, files) => {
+      form.parse({ headers: req.headers, body: requestBodyBuffer }, (err, fields, files) => {
         if (err) reject(err)
-        resolve({fields, files})
+        resolve({ fields, files })
       })
     })
 
