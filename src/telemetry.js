@@ -46,10 +46,33 @@ class Telemetry {
    *
    * @return string
    */
-  uniqueId () {
+  /** uniqueId () {
     const accountId = this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
     const sessionId = this.sessionInfo.WeekendInfo.SessionID
     const subSessionId = this.sessionInfo.WeekendInfo.SubSessionID
+    return `${accountId}-${sessionId}-${subSessionId}`
+  }
+*/
+
+  uniqueId () {
+    // Default values to indicate missing or unavailable data
+    const defaultId = 'Unknown'
+
+    // Safely access nested properties
+    const accountId = this.sessionInfo && this.sessionInfo.DriverInfo && Array.isArray(this.sessionInfo.DriverInfo.Drivers) &&
+      this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx]
+      ? this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
+      : defaultId
+
+    const sessionId = this.sessionInfo && this.sessionInfo.WeekendInfo
+      ? this.sessionInfo.WeekendInfo.SessionID
+      : defaultId
+
+    const subSessionId = this.sessionInfo && this.sessionInfo.WeekendInfo
+      ? this.sessionInfo.WeekendInfo.SubSessionID
+      : defaultId
+
+    // Concatenate the IDs with safety checks
     return `${accountId}-${sessionId}-${subSessionId}`
   }
 
