@@ -1,6 +1,5 @@
-import Irsdk from './irsdk-constants'
-import R from 'ramda'
-
+const Irsdk = require('./irsdk-constants');
+const R = require('ramda');
 const variableHeaders = new WeakMap()
 
 export default class TelemetrySample {
