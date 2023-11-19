@@ -24,35 +24,44 @@ const { Telemetry } = require('./telemetry')
 
 module.exports = async function (context, req) {
   try {
-    // Buffer the request body
-    const requestBodyBuffer = Buffer.from(req.body)
+    // Check if there's an incoming stream
+    if (req.rawBody) {
+      // Process the stream here
+      const rawData = req.rawBody
+      // You can convert the raw data to a buffer or process it as needed
+      const requestBodyBuffer = Buffer.from(rawData)
+      // Buffer the request body
+      //const requestBodyBuffer = Buffer.from(req.body)
 
-    // Parse the request body using formidable
-    const formData = await new Promise((resolve, reject) => {
-      const form = new formidable.IncomingForm()
+      // Parse the request body using formidable
+      const formData = await new Promise((resolve, reject) => {
+        const form = new formidable.IncomingForm()
 
-      form.parse({ headers: req.headers, body: requestBodyBuffer }, (err, fields, files) => {
-        if (err) reject(err)
-        resolve({ fields, files })
+        form.parse({ headers: req.headers, body: requestBodyBuffer }, (err, fields, files) => {
+          if (err) reject(err)
+          resolve({ fields, files })
+        })
       })
-    })
 
-    // Assume the file is uploaded with the key 'ibtFile'
-    const uploadedFile = formData.ibtFile
+      // Assume the file is uploaded with the key 'ibtFile'
+      const uploadedFile = formData.ibtFile
 
-    // Read the file content (this step depends on how formidable returns the file)
-    const telemetryData = fs.readFileSync(uploadedFile.filepath)
+      // Read the file content (this step depends on how formidable returns the file)
+      const telemetryData = fs.readFileSync(uploadedFile.filepath)
 
-    // Parse telemetry data
-    const telemetry = new Telemetry(telemetryData)
+      // Parse telemetry data
+      const telemetry = new Telemetry(telemetryData)
 
-    // Process the telemetry data as needed
-    console.log(telemetry.header)
+      // Process the telemetry data as needed
+      console.log(telemetry.header)
 
-    // Send response
-    context.res = {
-      status: 200,
-      body: 'Telemetry data processed.'
+      // Send response
+      context.res = {
+        status: 200,
+        body: 'Telemetry data processed.'
+      }
+    } else {
+      throw new Error("No data received in request.");
     }
   } catch (error) {
     context.res = {
