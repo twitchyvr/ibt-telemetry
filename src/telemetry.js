@@ -59,8 +59,12 @@ class Telemetry {
     const accountId = this.sessionInfo && this.sessionInfo.DriverInfo && this.sessionInfo.DriverInfo.Drivers && this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx]
       ? this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
       : defaultId
-    const sessionId = this.sessionInfo?.WeekendInfo?.SessionID ?? defaultId
-    const subSessionId = this.sessionInfo?.WeekendInfo?.SubSessionID ?? defaultId
+    const sessionId = this.sessionInfo && this.sessionInfo.WeekendInfo && this.sessionInfo.WeekendInfo.SessionID
+      ? this.sessionInfo.WeekendInfo.SessionID
+      : defaultId
+    const subSessionId = this.sessionInfo && this.sessionInfo.WeekendInfo && this.sessionInfo.WeekendInfo.SubSessionID
+      ? this.sessionInfo.WeekendInfo.SubSessionID
+      : defaultId
 
     // Log the IDs for debugging
     console.log(`Extracted IDs - Account: ${accountId}, Session: ${sessionId}, SubSession: ${subSessionId}`)
