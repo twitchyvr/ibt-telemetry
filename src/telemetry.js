@@ -46,15 +46,14 @@ class Telemetry {
    *
    * @return string
    */
-  /**
   uniqueId () {
     const accountId = this.sessionInfo.DriverInfo.Drivers[this.sessionInfo.DriverInfo.DriverCarIdx].UserID
     const sessionId = this.sessionInfo.WeekendInfo.SessionID
     const subSessionId = this.sessionInfo.WeekendInfo.SubSessionID
     return `${accountId}-${sessionId}-${subSessionId}`
   }
-  */
 
+  /**
   uniqueId () {
     // Default values to indicate missing data
     const defaultDriverInfo = {
@@ -94,6 +93,7 @@ class Telemetry {
 
     return `${accountId}-${sessionId}-${subSessionId}`
   }
+  */
 
   /**
    * Telemetry samples generator.
