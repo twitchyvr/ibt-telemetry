@@ -1,68 +1,38 @@
-/**
- * iRacing ibt telemetry parser.
-
-const Telemetry = require('./telemetry')
-const Sample = require('./telemetry-sample')
-const readFileToBuffer = require('./utils/read-file-to-buffer')
-const telemetryFileLoader = require('./utils/telemetry-file-loader')
-const irsdkConstants = require('./irsdk-constants')
-
-module.exports = {
-  Telemetry,
-  Sample,
-  readFileToBuffer,
-  telemetryFileLoader,
-  constants: irsdkConstants
-}
-*/
-
-// You might need to install and use a library like formidable to parse multipart/form-data
-const fs = require('fs')
+const http = require('http')
 const formidable = require('formidable')
+const fs = require('fs')
 
 const { Telemetry } = require('./telemetry')
 
 module.exports = async function (context, req) {
   try {
-    // Check if there's an incoming stream
-    if (req.rawBody) {
-      // Process the stream here
-      const rawData = req.rawBody
-      // You can convert the raw data to a buffer or process it as needed
-      const requestBodyBuffer = Buffer.from(rawData)
-      // Buffer the request body
-      // const requestBodyBuffer = Buffer.from(req.body)
+    // Convert req to Node.js request
+    const nodeReq = http.request(req)
 
-      // Parse the request body using formidable
-      const formData = await new Promise((resolve, reject) => {
-        const form = new formidable.IncomingForm()
+    // Parse form with formidable
+    const form = new formidable.IncomingForm()
+    form.parse(nodeReq, (err, fields, files) => {
+      // Handle error
+      if (err) {
+        throw new Error(err)
+      }
 
-        form.parse({ headers: req.headers, body: requestBodyBuffer }, (err, fields, files) => {
-          if (err) reject(err)
-          resolve({ fields, files })
-        })
-      })
+      // Get uploaded file
+      const uploadedFile = files.ibtFile
 
-      // Assume the file is uploaded with the key 'ibtFile'
-      const uploadedFile = formData.ibtFile
-
-      // Read the file content (this step depends on how formidable returns the file)
+      // Read file
       const telemetryData = fs.readFileSync(uploadedFile.filepath)
 
-      // Parse telemetry data
+      // Process telemetry
       const telemetry = new Telemetry(telemetryData)
-
-      // Process the telemetry data as needed
       console.log(telemetry.header)
 
-      // Send response
+      // Response
       context.res = {
         status: 200,
         body: 'Telemetry data processed.'
       }
-    } else {
-      throw new Error('No data received in request.')
-    }
+    })
   } catch (error) {
     context.res = {
       status: 500,
