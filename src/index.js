@@ -1,42 +1,41 @@
-const http = require('http')
-const formidable = require('formidable')
-const fs = require('fs')
-
-const { Telemetry } = require('./telemetry')
+const formidable = require('formidable');
+const util = require('util');
+const fs = require('fs');
+const { Telemetry } = require('./telemetry');
 
 module.exports = async function (context, req) {
   try {
-    // Convert req to Node.js request
-    const nodeReq = http.request(req)
+    // Convert formidable form parsing to a promise
+    const form = new formidable.IncomingForm();
+    const parse = util.promisify(form.parse).bind(form);
 
-    // Parse form with formidable
-    const form = new formidable.IncomingForm()
-    form.parse(nodeReq, (err, fields, files) => {
-      // Handle error
-      if (err) {
-        throw new Error(err)
-      }
+    // Parse the form
+    const { fields, files } = await parse(req);
 
-      // Get uploaded file
-      const uploadedFile = files.ibtFile
+    // Get uploaded file
+    const uploadedFile = files.ibtFile;
 
-      // Read file
-      const telemetryData = fs.readFileSync(uploadedFile.filepath)
+    // Ensure file exists
+    if (!uploadedFile) {
+      throw new Error('No file uploaded.');
+    }
 
-      // Process telemetry
-      const telemetry = new Telemetry(telemetryData)
-      console.log(telemetry.header)
+    // Read file
+    const telemetryData = fs.readFileSync(uploadedFile.filepath);
 
-      // Response
-      context.res = {
-        status: 200,
-        body: 'Telemetry data processed.'
-      }
-    })
+    // Process telemetry
+    const telemetry = new Telemetry(telemetryData);
+    console.log(telemetry.header);
+
+    // Response
+    context.res = {
+      status: 200,
+      body: 'Telemetry data processed.'
+    };
   } catch (error) {
     context.res = {
       status: 500,
       body: `Error: ${error.message}`
-    }
+    };
   }
-}
+};
