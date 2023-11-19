@@ -76,6 +76,10 @@ class Telemetry {
     const sessionId = weekendInfo.SessionID
     const subSessionId = weekendInfo.SubSessionID
 
+    if (!this.sessionInfo || !this.sessionInfo.DriverInfo || !this.sessionInfo.WeekendInfo) {
+      console.warn('Telemetry: Missing session or driver information, using default values.')
+    }
+
     return `${accountId}-${sessionId}-${subSessionId}`
   }
 
