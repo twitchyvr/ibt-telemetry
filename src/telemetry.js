@@ -56,20 +56,25 @@ class Telemetry {
   */
 
   uniqueId () {
-    if (!this.sessionInfo || !this.sessionInfo.DriverInfo || !Array.isArray(this.sessionInfo.DriverInfo.Drivers)) {
-      return 'Invalid-Session-Info' // or handle this situation as appropriate for your application
+    // Default values to indicate missing data
+    const defaultDriverInfo = {
+      Drivers: [{ UserID: 'Unknown' }]
     }
 
-    const driverCarIdx = this.sessionInfo.DriverInfo.DriverCarIdx
-    const driver = this.sessionInfo.DriverInfo.Drivers[driverCarIdx]
-
-    if (!driver) {
-      return 'Invalid-Driver' // or handle appropriately
+    const defaultWeekendInfo = {
+      SessionID: 'Unknown',
+      SubSessionID: 'Unknown'
     }
 
-    const accountId = driver.UserID
-    const sessionId = this.sessionInfo.WeekendInfo.SessionID
-    const subSessionId = this.sessionInfo.WeekendInfo.SubSessionID
+    const driverInfo = this.sessionInfo?.DriverInfo || defaultDriverInfo
+    const weekendInfo = this.sessionInfo?.WeekendInfo || defaultWeekendInfo
+
+    const driverCarIdx = driverInfo.DriverCarIdx || 0
+    const driver = driverInfo.Drivers[driverCarIdx]
+
+    const accountId = driver?.UserID || 'Unknown'
+    const sessionId = weekendInfo.SessionID
+    const subSessionId = weekendInfo.SubSessionID
 
     return `${accountId}-${sessionId}-${subSessionId}`
   }
