@@ -6,24 +6,41 @@ const SIZE_IN_BYTES = 144
  */
 class VarHeader {
   /**
-   * Construct an instance of VarHeader
-   *
-   * params = {
-   *   type,
-   *   offset,
-   *   count,
-   *   countAsTime,
-   *   name,
-   *   description,
-   *   unit
-   * }
-   */
+  * Create a VarHeader instance.
+  *
+  * @param {Object} params - Parameters for the header
+  */
   constructor (params) {
-    Object.assign(this, params)
+    if (!params.name) {
+      throw new Error('VarHeader requires a name')
+    }
+
+    const headerParams = {
+      type: 0,
+      offset: '',
+      count: 0,
+      countAsTime: 0,
+      name: '',
+      description: '',
+      unit: ''
+    }
+
+    Object.assign(this, headerParams)
+  }
+
+  get name () {
+    return this._name
+  }
+
+  get type () {
+    return this._type
   }
 
   /**
-   * Instantiate VarHeader from the contents of the supplied buffer
+   * Create VarHeader from a buffer.
+   *
+   * @param {Buffer} buffer - Buffer containing the header data
+   * @returns {VarHeader}
    */
   static fromBuffer (buffer) {
     if (buffer.length !== SIZE_IN_BYTES) {
