@@ -14,6 +14,14 @@ module.exports = async function (context, req) {
     // Process telemetry
     const telemetry = new Telemetry(telemetryData)
 
+    if (telemetry.error) {
+      // Handle error case
+      context.res = {
+        status: 400,
+        body: telemetry.error
+      }
+      return
+    }
     // console.log('Telemetry headers:', telemetry.headers)
     // console.log(telemetry.header)
 

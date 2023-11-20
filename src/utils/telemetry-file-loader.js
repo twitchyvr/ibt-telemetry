@@ -27,9 +27,18 @@ const telemetryHeaderFromFileDescriptor = fd =>
     .then(TelemetryHeader.fromBuffer)
 
 // Disk sub header telemetry
-const diskSubHeaderFromFileDescriptor = fd =>
-  readFileToBuffer(fd, DISK_SUB_HEADER_SIZE_IN_BYTES, HEADER_SIZE_IN_BYTES)
-    .then(DiskSubHeader.fromBuffer)
+const diskSubHeaderFromFileDescriptor = fd => {
+  // Ensure the start position and length are correct
+  const startPosition = HEADER_SIZE_IN_BYTES
+  const length = DISK_SUB_HEADER_SIZE_IN_BYTES
+
+  return readFileToBuffer(fd, HEADER_SIZE_IN_BYTES, DISK_SUB_HEADER_SIZE_IN_BYTES)
+    .then(buffer => {
+      console.log('Disk Sub Header buffer length:', buffer.length)
+      console.log('Disk Sub Header buffer content:', buffer.toString('hex'))
+      return DiskSubHeader.fromBuffer(buffer)
+    })
+}
 
 const sessionInfoStringFromFileDescriptor = (fd, telemetryHeader) => {
   if (!isNumber(telemetryHeader.sessionInfoOffset, 'sessionInfoOffset') ||
@@ -65,7 +74,7 @@ const varHeadersFromFileDescriptor = (fd, telemetryHeader) => {
     return Promise.reject(new Error('Invalid buffer size'))
   }
 
-  return readFileToBuffer(fd, startPosition, fullBufferSize)
+  return readFileToBuffer(fd, startPosition, length)
     .then(buffer => {
       return R.range(0, numberOfVariables).map(count => {
         const start = count * VAR_HEADER_SIZE_IN_BYTES
