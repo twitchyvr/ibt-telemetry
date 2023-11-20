@@ -13,8 +13,14 @@ class Telemetry {
    * Telemetry constructor.
    */
   constructor (telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd) {
-    this.headers = telemetryHeader
-    this.diskHeaders = diskSubHeader
+    if (!telemetryHeader || !diskSubHeader || !varHeaders) {
+      throw new Error('Missing telemetry data components')
+    }
+    console.log('Telemetry Header:', telemetryHeader)
+    console.log('Disk Sub Header:', diskSubHeader)
+
+    this.headers = TelemetryHeader.fromBuffer(telemetryHeader)
+    this.diskHeaders = DiskSubHeader.fromBuffer(diskSubHeader)
 
     // Check if sessionInfo is not undefined
     if (sessionInfo) {
@@ -32,8 +38,9 @@ class Telemetry {
       this.sessionInfo = {}
     }
 
+    variableHeaders.set(this, varHeaders.map(header => VarHeader.fromBuffer(header)))
     fileDescriptor.set(this, fd)
-    variableHeaders.set(this, varHeaders)
+    console.log('Variable Headers:', varHeaders)
   }
 
   /**
@@ -182,22 +189,17 @@ class Telemetry {
    * Telemetry samples generator.
    */
   * samples () {
-    let hasSample = true
     let count = 0
-
     const fd = fileDescriptor.get(this)
     const length = this.headers.bufLen
     const buffer = Buffer.alloc(length)
 
-    while (hasSample) {
-      const start = this.headers.bufOffset + (count++ * length)
+    while (true) {
+      const start = this.headers.bufOffset + (count * length)
       const bytesRead = fs.readSync(fd, buffer, 0, length, start)
-
-      if (bytesRead !== length) {
-        hasSample = false
-      } else {
-        yield new TelemetrySample(buffer, this.varHeaders)
-      }
+      if (bytesRead !== length) break
+      yield new TelemetrySample(buffer, this.varHeaders)
+      count++
     }
   }
 }
