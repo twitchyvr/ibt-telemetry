@@ -67,6 +67,10 @@ class Telemetry {
     return telemetryFileLoader(file)
   }
 
+  static fromBuffer (buffer) {
+    return telemetryFileLoader(buffer)
+  }
+
   /**
    * Telemetry variable headers.
    */
@@ -152,50 +156,56 @@ class Telemetry {
   }
 
   getTelemetryDataSummary () {
-    let totalSpeed = 0
-    let maxRpm = 0
-    let totalLaps = 0
-    let bestLapTime = Number.MAX_VALUE
-    const lapTimes = []
-    let highestSpeed = 0
-    let totalBrakePressure = 0
-    let totalThrottle = 0
-    let sampleCount = 0
+    try {
+      let totalSpeed = 0
+      let maxRpm = 0
+      let totalLaps = 0
+      let bestLapTime = Number.MAX_VALUE
+      const lapTimes = []
+      let highestSpeed = 0
+      let totalBrakePressure = 0
+      let totalThrottle = 0
+      let sampleCount = 0
 
-    for (const sample of this.samples()) {
-      totalSpeed += sample.speed
-      maxRpm = Math.max(maxRpm, sample.rpm)
-      highestSpeed = Math.max(highestSpeed, sample.speed)
-      totalBrakePressure += sample.brakePressure
-      totalThrottle += sample.throttle
-      sampleCount++
+      for (const sample of this.samples()) {
+        totalSpeed += sample.speed
+        maxRpm = Math.max(maxRpm, sample.rpm)
+        highestSpeed = Math.max(highestSpeed, sample.speed)
+        totalBrakePressure += sample.brakePressure
+        totalThrottle += sample.throttle
+        sampleCount++
 
-      // Assuming sample.lapTime and sample.lapNumber are available
-      if (sample.lapTime < bestLapTime) {
-        bestLapTime = sample.lapTime
+        // Assuming sample.lapTime and sample.lapNumber are available
+        if (sample.lapTime < bestLapTime) {
+          bestLapTime = sample.lapTime
+        }
+        if (!lapTimes[sample.lapNumber]) {
+          lapTimes[sample.lapNumber] = []
+        }
+        lapTimes[sample.lapNumber].push(sample.lapTime)
       }
-      if (!lapTimes[sample.lapNumber]) {
-        lapTimes[sample.lapNumber] = []
+
+      totalLaps = lapTimes.length
+
+      // Calculate averages
+      const avgSpeed = totalSpeed / sampleCount
+      const avgBrakePressure = totalBrakePressure / sampleCount
+      const avgThrottle = totalThrottle / sampleCount
+
+      return {
+        averageSpeed: avgSpeed,
+        maxRPM: maxRpm,
+        totalLaps,
+        bestLapTime,
+        highestSpeed,
+        averageBrakePressure: avgBrakePressure,
+        averageThrottle: avgThrottle,
+        lapTimes: lapTimes.map(lap => lap.reduce((a, b) => a + b, 0) / lap.length)
       }
-      lapTimes[sample.lapNumber].push(sample.lapTime)
-    }
-
-    totalLaps = lapTimes.length
-
-    // Calculate averages
-    const avgSpeed = totalSpeed / sampleCount
-    const avgBrakePressure = totalBrakePressure / sampleCount
-    const avgThrottle = totalThrottle / sampleCount
-
-    return {
-      averageSpeed: avgSpeed,
-      maxRPM: maxRpm,
-      totalLaps,
-      bestLapTime,
-      highestSpeed,
-      averageBrakePressure: avgBrakePressure,
-      averageThrottle: avgThrottle,
-      lapTimes: lapTimes.map(lap => lap.reduce((a, b) => a + b, 0) / lap.length)
+    } catch (error) {
+      console.error('Error in getTelemetryDataSummary:', error)
+      // Handle the error or rethrow, depending on your error handling strategy
+      throw error
     }
   }
 

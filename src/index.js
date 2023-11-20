@@ -6,44 +6,42 @@ module.exports = async function (context, req) {
       throw new Error('No file uploaded.')
     }
 
-    // Convert the raw body to a Buffer if it's a string
     const rawData = typeof req.rawBody === 'string' ? Buffer.from(req.rawBody, 'binary') : req.rawBody
 
-    console.log('Type of rawData:', typeof rawData) // Log the type of rawData for debugging
+    // Additional logging
+    context.log('Type of rawData:', typeof rawData)
+    context.log('Buffer size:', rawData.length)
 
-    // Process telemetry with the converted buffer
-    const telemetry = new Telemetry(rawData)
-
-    if (telemetry.error) {
-      // Handle error case
-      context.res = {
-        status: 400,
-        body: telemetry.error
+    // Try to process telemetry
+    try {
+      // const telemetry = new Telemetry(rawData)
+      // const telemetry = await Telemetry.fromFile(rawData) // Adjust this line based on how your file loader works
+      const telemetry = await Telemetry.fromBuffer(rawData);
+      const telemetrySummary = {
+        uniqueId: telemetry.uniqueId(),
+        header: telemetry.headers,
+        sessionInfo: telemetry.sessionInfo,
+        varHeaders: telemetry.varHeaders,
+        diskHeaders: telemetry.diskHeaders,
+        sampleCount: telemetry.sampleCount(),
+        duration: telemetry.duration(),
+        laps: telemetry.laps(),
+        variables: telemetry.variables()
       }
-      return
-    }
-    console.log('Telemetry headers:', telemetry.headers)
-    console.log(telemetry.header)
 
-    const telemetrySummary = {
-      uniqueId: telemetry.uniqueId(),
-      header: telemetry.headers, // Assuming this contains the parsed header data
-      sessionInfo: telemetry.sessionInfo, // Contains the parsed YAML session info
-      varHeaders: telemetry.varHeaders // Assuming this method returns the variable headers
-      // Add a method to extract summarized telemetry data
-      // telemetryData: telemetry.getTelemetryDataSummary()
-      // You can add more methods as needed to extract different parts of the telemetry data
-    }
-
-    // Response
-    context.res = {
-      status: 200,
-      body: telemetrySummary
+      context.res = {
+        status: 200,
+        body: telemetrySummary
+      }
+    } catch (telemetryError) {
+      context.log.error('Error processing telemetry:', telemetryError)
+      throw telemetryError // Rethrow to be caught by outer catch
     }
   } catch (error) {
     context.res = {
       status: 500,
-      body: `Error: ${error.message}`
+      body: `Error: ${error.message} \r\nStack: ${error.stack}\r\nRawBody: ${rawData}`
     }
+    context.log.error('Function execution error:', error)
   }
 }

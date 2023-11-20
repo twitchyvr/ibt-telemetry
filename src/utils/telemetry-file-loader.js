@@ -5,6 +5,7 @@ const { SIZE_IN_BYTES: DISK_SUB_HEADER_SIZE_IN_BYTES, DiskSubHeader } = require(
 const { SIZE_IN_BYTES: VAR_HEADER_SIZE_IN_BYTES, VarHeader } = require('../headers/var-header')
 const readFileToBuffer = require('../utils/read-file-to-buffer')
 const Telemetry = require('../telemetry')
+const yaml = require('js-yaml')
 
 // Utility function to log and check if a value is a number
 function isNumber (value, name) {
@@ -84,24 +85,34 @@ const varHeadersFromFileDescriptor = (fd, telemetryHeader) => {
     })
 }
 
-const telemetryFileLoader = (file) => {
-  return openDataFile(file)
-    .then(fd => {
-      const headers = [
-        telemetryHeaderFromFileDescriptor(fd),
-        diskSubHeaderFromFileDescriptor(fd)
-      ]
+const telemetryFileLoader = (buffer) => {
+  try {
+    // Assuming the buffer contains the entire .ibt file content
+    // Extract the headers and other information from the buffer
+    const telemetryHeader = TelemetryHeader.fromBuffer(buffer.slice(0, HEADER_SIZE_IN_BYTES))
+    const diskSubHeader = DiskSubHeader.fromBuffer(buffer.slice(HEADER_SIZE_IN_BYTES, HEADER_SIZE_IN_BYTES + DISK_SUB_HEADER_SIZE_IN_BYTES))
 
-      return Promise.all(headers)
-        .then(([telemetryHeader, diskSubHeader]) => {
-          return Promise.all([
-            sessionInfoStringFromFileDescriptor(fd, telemetryHeader),
-            varHeadersFromFileDescriptor(fd, telemetryHeader)
-          ]).then(([sessionInfo, varHeaders]) => {
-            return new Telemetry(telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd)
-          })
-        })
-    })
+    // Extract session info string
+    const sessionInfoStart = telemetryHeader.sessionInfoOffset
+    const sessionInfoLength = telemetryHeader.sessionInfoLength
+    const sessionInfoString = buffer.toString('ascii', sessionInfoStart, sessionInfoStart + sessionInfoLength)
+    const sessionInfo = yaml.load(sessionInfoString)
+
+    // Extract variable headers
+    const varHeadersStart = telemetryHeader.varHeaderOffset
+    const varHeaders = []
+    for (let i = 0; i < telemetryHeader.numVars; i++) {
+      const start = varHeadersStart + i * VAR_HEADER_SIZE_IN_BYTES
+      const varHeader = VarHeader.fromBuffer(buffer.slice(start, start + VAR_HEADER_SIZE_IN_BYTES))
+      varHeaders.push(varHeader)
+    }
+
+    // Create and return the Telemetry instance
+    return new Telemetry(telemetryHeader, diskSubHeader, sessionInfo, varHeaders, null) // Last argument 'fd' is null as it's not applicable here
+  } catch (error) {
+    console.error('Error processing telemetry buffer:', error)
+    throw error // Rethrow to handle the error outside
+  }
 }
 
 module.exports = telemetryFileLoader
