@@ -2,14 +2,17 @@ const Telemetry = require('./telemetry')
 
 module.exports = async function (context, req) {
   try {
-    // Check if there is content in the request body
     if (!req.rawBody) {
       throw new Error('No file uploaded.')
     }
 
+    // Convert the raw body to a Buffer if it's a string
+    const rawData = typeof req.rawBody === 'string' ? Buffer.from(req.rawBody, 'binary') : req.rawBody
+
     // The binary data of the .ibt file is contained in req.rawBody
     const telemetryData = req.rawBody
-    console.log('Type of rawBody:', typeof req.rawBody)
+
+    console.log('Type of rawBody:', rawData)
 
     // Process telemetry
     const telemetry = new Telemetry(telemetryData)
@@ -22,20 +25,8 @@ module.exports = async function (context, req) {
       }
       return
     }
-    // console.log('Telemetry headers:', telemetry.headers)
-    // console.log(telemetry.header)
-
-    /**
-    // Example: Create a summary or extract specific data from telemetry
-    const telemetrySummary = {
-      uniqueId: telemetry.uniqueId(),
-      header: telemetry.header,
-      sessionInfo: telemetry.sessionInfo,
-      varHeaders: telemetry.varHeaders,
-      telemetryData: telemetry.data
-      // Add other telemetry properties or summaries here
-    }
-    */
+    console.log('Telemetry headers:', telemetry.headers)
+    console.log(telemetry.header)
 
     const telemetrySummary = {
       uniqueId: telemetry.uniqueId(),
