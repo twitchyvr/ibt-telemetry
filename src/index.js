@@ -9,13 +9,10 @@ module.exports = async function (context, req) {
     // Convert the raw body to a Buffer if it's a string
     const rawData = typeof req.rawBody === 'string' ? Buffer.from(req.rawBody, 'binary') : req.rawBody
 
-    // The binary data of the .ibt file is contained in req.rawBody
-    const telemetryData = req.rawBody
+    console.log('Type of rawData:', typeof rawData) // Log the type of rawData for debugging
 
-    console.log('Type of rawBody:', rawData)
-
-    // Process telemetry
-    const telemetry = new Telemetry(telemetryData)
+    // Process telemetry with the converted buffer
+    const telemetry = new Telemetry(rawData)
 
     if (telemetry.error) {
       // Handle error case
