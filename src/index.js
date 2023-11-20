@@ -9,6 +9,7 @@ module.exports = async function (context, req) {
 
     // The binary data of the .ibt file is contained in req.rawBody
     const telemetryData = req.rawBody
+    console.log('Type of rawBody:', typeof req.rawBody)
 
     // Process telemetry
     const telemetry = new Telemetry(telemetryData)
