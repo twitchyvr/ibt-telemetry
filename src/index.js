@@ -39,7 +39,7 @@ module.exports = async function (context, req) {
   } catch (error) {
     context.res = {
       status: 500,
-      body: `Error: ${error.message} \r\nStack: ${error.stack}\r\nRaw Data: ${rawData}`
+      body: `Error: ${error.message} \r\nStack: ${error.stack}`
     }
     context.log.error('Function execution error:', error)
   }
