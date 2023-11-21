@@ -1,13 +1,21 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Attach to Node Functions",
-            "type": "node",
-            "request": "attach",
-            "port": 9229,
-            "preLaunchTask": "func: host start",
-            "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v10.24.1/bin/node"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Node Functions",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "preLaunchTask": "func: host start",
+      "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v10.24.1/bin/node"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/mattrogers/Downloads",
+      "program": "/Users/mattrogers/Downloads/build/Debug/outDebug"
+    }
+  ]
 }

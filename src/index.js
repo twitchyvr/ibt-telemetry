@@ -14,9 +14,7 @@ module.exports = async function (context, req) {
 
     // Try to process telemetry
     try {
-      // const telemetry = new Telemetry(rawData)
-      // const telemetry = await Telemetry.fromFile(rawData) // Adjust this line based on how your file loader works
-      const telemetry = await Telemetry.fromBuffer(rawData);
+      const telemetry = await Telemetry.fromBuffer(rawData)
       const telemetrySummary = {
         uniqueId: telemetry.uniqueId(),
         header: telemetry.headers,
@@ -26,7 +24,8 @@ module.exports = async function (context, req) {
         sampleCount: telemetry.sampleCount(),
         duration: telemetry.duration(),
         laps: telemetry.laps(),
-        variables: telemetry.variables()
+        variables: telemetry.variables(),
+        telemetry: telemetry.samples()
       }
 
       context.res = {
@@ -40,7 +39,7 @@ module.exports = async function (context, req) {
   } catch (error) {
     context.res = {
       status: 500,
-      body: `Error: ${error.message} \r\nStack: ${error.stack}\r\nRawBody: ${rawData}`
+      body: `Error: ${error.message} \r\nStack: ${error.stack}\r\nRaw Data: ${rawData}`
     }
     context.log.error('Function execution error:', error)
   }
