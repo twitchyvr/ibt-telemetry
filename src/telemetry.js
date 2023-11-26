@@ -40,9 +40,8 @@ class Telemetry {
     if (sessionInfo) {
       try {
         const yamlString = sessionInfo.toString()
-        console.log('Raw YAML:', yamlString) // Ensure this logs the full YAML string
-        this.sessionInfo = yaml.load(yamlString)
-        console.log('Parsed Session Info:', this.sessionInfo) // Log parsed data for verification
+        console.log('Raw YAML:', yamlString)
+        this.sessionInfo = yaml.load(yamlString) // Make sure to load from yamlString
       } catch (error) {
         console.error('Error parsing YAML:', error)
         this.sessionInfo = {}
