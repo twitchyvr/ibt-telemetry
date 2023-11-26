@@ -92,10 +92,10 @@ const telemetryFileLoader = (buffer) => {
     const telemetryHeader = TelemetryHeader.fromBuffer(buffer.slice(0, HEADER_SIZE_IN_BYTES))
     const diskSubHeader = DiskSubHeader.fromBuffer(buffer.slice(HEADER_SIZE_IN_BYTES, HEADER_SIZE_IN_BYTES + DISK_SUB_HEADER_SIZE_IN_BYTES))
 
-    // Extract session info string
+    // Extract and parse the YAML session info
     const sessionInfoStart = telemetryHeader.sessionInfoOffset
     const sessionInfoLength = telemetryHeader.sessionInfoLength
-    const sessionInfoString = buffer.toString('ascii', sessionInfoStart, sessionInfoStart + sessionInfoLength)
+    const sessionInfoString = sessionInfoStringFromFileDescriptor(fd, telemetryHeader)
     const sessionInfo = yaml.load(sessionInfoString)
 
     // Extract variable headers
@@ -107,8 +107,8 @@ const telemetryFileLoader = (buffer) => {
       varHeaders.push(varHeader)
     }
 
-    // Create and return the Telemetry instance
-    return new Telemetry(telemetryHeader, diskSubHeader, sessionInfo, varHeaders, null) // Last argument 'fd' is null as it's not applicable here
+    // Create and return the Telemetry instance with sessionInfo
+    return new Telemetry(telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd)
   } catch (error) {
     console.error('Error processing telemetry buffer:', error)
     throw error // Rethrow to handle the error outside
