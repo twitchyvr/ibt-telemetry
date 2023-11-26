@@ -45,26 +45,13 @@ const sessionInfoStringFromFileDescriptor = (fd, telemetryHeader) => {
 }
 
 const varHeadersFromFileDescriptor = (fd, telemetryHeader) => {
-  // Add logging
-  console.log('Num vars:', telemetryHeader.numVars)
   if (!isNumber(telemetryHeader.numVars, 'numVars')) {
     return Promise.reject(new Error('Invalid number of variables (numVars)'))
   }
 
   const numberOfVariables = telemetryHeader.numVars
   const startPosition = telemetryHeader.varHeaderOffset
-
-  // Add check before using in buffer size
-  if (!isNumber(numberOfVariables)) {
-    return Promise.reject(new Error('Invalid numVars'))
-  }
-
   const fullBufferSize = numberOfVariables * VAR_HEADER_SIZE_IN_BYTES
-
-  // Add check before passing to read buffer
-  if (!isNumber(fullBufferSize)) {
-    return Promise.reject(new Error('Invalid buffer size'))
-  }
 
   return readFileToBuffer(fd, startPosition, fullBufferSize)
     .then(buffer => {

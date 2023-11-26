@@ -33,6 +33,7 @@ module.exports = async function (context, req) {
     // console.log(telemetry.header)
 >>>>>>> parent of 9cac5f7 (multiple updates)
 
+<<<<<<< HEAD
       context.res = {
         status: 200,
         body: telemetrySummary
@@ -40,6 +41,32 @@ module.exports = async function (context, req) {
     } catch (telemetryError) {
       context.log.error('Error processing telemetry:', telemetryError)
       throw telemetryError // Rethrow to be caught by outer catch
+=======
+    /**
+    // Example: Create a summary or extract specific data from telemetry
+    const telemetrySummary = {
+      uniqueId: telemetry.uniqueId(),
+      header: telemetry.header,
+      sessionInfo: telemetry.sessionInfo,
+      varHeaders: telemetry.varHeaders,
+      telemetryData: telemetry.data
+      // Add other telemetry properties or summaries here
+    }
+    */
+
+    const telemetrySummary = {
+      uniqueId: telemetry.uniqueId(),
+      header: telemetry.headers, // Assuming this contains the parsed header data
+      sessionInfo: telemetry.sessionInfo, // Contains the parsed YAML session info
+      varHeaders: telemetry.varHeaders, // Assuming this method returns the variable headers
+      telemetryData: telemetry.getTelemetryDataSummary()
+    }
+
+    // Response
+    context.res = {
+      status: 200,
+      body: telemetrySummary
+>>>>>>> parent of 84efee0 (we have some working output)
     }
   } catch (error) {
     context.res = {
