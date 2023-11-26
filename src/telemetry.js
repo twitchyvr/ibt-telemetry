@@ -13,23 +13,9 @@ class Telemetry {
    * Telemetry constructor.
    */
   constructor (telemetryHeader, diskSubHeader, sessionInfo, varHeaders, fd) {
-    // Throw errors if required params are missing
-    if (!telemetryHeader) {
-      throw new Error('Telemetry header is required')
+    if (!telemetryHeader || !diskSubHeader || !varHeaders) {
+      throw new Error('Missing telemetry data components')
     }
-
-    if (!diskSubHeader) {
-      throw new Error('Disk sub header is required')
-    }
-
-    if (!sessionInfo) {
-      throw new Error('Session Info is required')
-    }
-
-    if (!varHeaders) {
-      throw new Error('varHeaders is required')
-    }
-
     console.log('Telemetry Header:', telemetryHeader)
     console.log('Disk Sub Header:', diskSubHeader)
 

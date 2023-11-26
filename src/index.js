@@ -12,6 +12,7 @@ module.exports = async function (context, req) {
     context.log('Type of rawData:', typeof rawData)
     context.log('Buffer size:', rawData.length)
 
+<<<<<<< HEAD
     // Try to process telemetry
     try {
       const telemetry = await Telemetry.fromBuffer(rawData)
@@ -27,6 +28,10 @@ module.exports = async function (context, req) {
         variables: telemetry.variables(),
         telemetry: telemetry.samples()
       }
+=======
+    // console.log('Telemetry headers:', telemetry.headers)
+    // console.log(telemetry.header)
+>>>>>>> parent of 9cac5f7 (multiple updates)
 
       context.res = {
         status: 200,

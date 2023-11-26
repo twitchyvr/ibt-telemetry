@@ -6,6 +6,17 @@ const SIZE_IN_BYTES = 32
  * Total size: 32 bytes
  */
 class DiskSubHeader {
+  /**
+   * DiskSubHeader constructor.
+   *
+   * params = {
+   *  startDate,
+   *  startTime,
+   *  endTime,
+   *  lapCount,
+   *  recordCount
+   * }
+   */
   constructor (params) {
     Object.assign(this, params)
   }
@@ -14,10 +25,6 @@ class DiskSubHeader {
    * Instantiate an instance of DiskSubHeader using the contents of the supplied buffer.
    */
   static fromBuffer (buffer) {
-    if (buffer.length !== SIZE_IN_BYTES) {
-      throw new Error(`Expected buffer length of ${SIZE_IN_BYTES}, but got ${buffer.length}`)
-    }
-
     return new DiskSubHeader({
       startDate: buffer.slice(0, 8).readFloatLE(),
       startTime: buffer.slice(8, 16).readDoubleLE(),
