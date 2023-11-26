@@ -58,8 +58,10 @@ module.exports = async function (context, req) {
       uniqueId: telemetry.uniqueId(),
       header: telemetry.headers, // Assuming this contains the parsed header data
       sessionInfo: telemetry.sessionInfo, // Contains the parsed YAML session info
-      varHeaders: telemetry.varHeaders, // Assuming this method returns the variable headers
+      varHeaders: telemetry.varHeaders(), // Assuming this method returns the variable headers
+      // Add a method to extract summarized telemetry data
       telemetryData: telemetry.getTelemetryDataSummary()
+      // You can add more methods as needed to extract different parts of the telemetry data
     }
 
     // Response
